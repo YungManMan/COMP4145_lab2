@@ -2,13 +2,20 @@ import pandas as pd
 import streamlit as st
 import altair as alt
 
-from trading_strategy import (
-    analyze_results,
-    calculate_moving_averages,
-    get_stock_data,
-    identify_golden_cross,
-    implement_strategy,
-)
+try:
+    from trading_strategy import (
+        analyze_results,
+        calculate_moving_averages,
+        get_stock_data,
+        identify_golden_cross,
+        implement_strategy,
+    )
+except ModuleNotFoundError as exc:
+    st.error(
+        "Missing dependency: the app could not import the trading logic. "
+        "Make sure `yfinance` is included in the deployment requirements."
+    )
+    st.stop()
 
 st.set_page_config(page_title="MSFT Trading Strategy Dashboard", layout="wide")
 
@@ -28,7 +35,11 @@ def load_strategy_data():
     return chart_df, positions, summary
 
 
-chart_df, positions, summary = load_strategy_data()
+try:
+    chart_df, positions, summary = load_strategy_data()
+except Exception as exc:
+    st.error(f"Unable to load trading data: {exc}")
+    st.stop()
 
 st.title("MSFT Trading Strategy Dashboard")
 

@@ -1,10 +1,18 @@
 import pandas as pd
 import numpy as np
-import yfinance as yf
 from datetime import datetime, timedelta
+
+try:
+    import yfinance as yf
+except ModuleNotFoundError:  # pragma: no cover - handled at runtime
+    yf = None
 
 # Download 5 years of MSFT data
 def get_stock_data(ticker, period="5y"):
+    if yf is None:
+        raise ModuleNotFoundError(
+            "yfinance is required. Install it with: pip install yfinance"
+        )
     stock = yf.Ticker(ticker)
     data = stock.history(period=period)
     return data
