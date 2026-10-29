@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="panel">
+  <div class="section-header">
+    <h1>Price Chart</h1>
+  </div>
+  <canvas id="priceChart" height="90"></canvas>
+</section>
+
+<script>
+  const chartData = {{ chart_data | tojson }};
+  const buyPoints = {{ buy_points | tojson }};
+  const sellPoints = {{ sell_points | tojson }};
+
+  const labels = chartData.map(row => row.Date);
+  const closeData = chartData.map(row => row.Close);
+  const ma50Data = chartData.map(row => row.MA50);
+  const ma200Data = chartData.map(row => row.MA200);
+
+  const buyMap = new Map(buyPoints.map(point => [point.date, point.price]));
+  const sellMap = new Map(sellPoints.map(point => [point.date, point.price]));
+
+  const buyDataset = labels.map((label) => buyMap.has(label) ? buyMap.get(label) : null);
+  const sellDataset = labels.map((label) => sellMap.has(label) ? sellMap.get(label) : null);
+
+  const ctx = document.getElementById('priceChart');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Close Price',
+          data: closeData,
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: false
+        },
+        {
+          label: 'MA 50',
+          data: ma50Data,
+          borderColor: '#10b981',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false
+        },
+        {
+          label: 'MA 200',
+          data: ma200Data,
+          borderColor: '#f59e0b',
+          borderWidth: 1.5,
+          pointRadius: 0,
+          fill: false
+        },
+        {
+          label: 'Buy Signals',
+          data: buyDataset,
+          borderColor: '#22c55e',
+          backgroundColor: '#22c55e',
+          pointRadius: 5,
+          pointStyle: 'circle',
+          showLine: false
+        },
+        {
+          label: 'Sell Signals',
+          data: sellDataset,
+          borderColor: '#ef4444',
+          backgroundColor: '#ef4444',
+          pointRadius: 5,
+          pointStyle: 'circle',
+          showLine: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          position: 'top'
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            maxTicksLimit: 12,
+            autoSkip: true
+          }
+        },
+        y: {
+          beginAtZero: false,
+          title: {
+            display: true,
+            text: 'Price ($)'
+          }
+        }
+      }
+    }
+  });
+</script>
+{% endblock %}

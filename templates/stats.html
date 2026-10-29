@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="panel">
+  <div class="section-header">
+    <h1>Trade Statistics</h1>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <span class="label">Total Trades</span>
+      <strong>{{ summary.total_trades }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Winning Trades</span>
+      <strong>{{ summary.winning_trades }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Losing Trades</span>
+      <strong>{{ summary.losing_trades }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Win Rate</span>
+      <strong>{{ summary.win_rate }}%</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Average Profit</span>
+      <strong>{{ summary.average_profit }}%</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Average Holding Days</span>
+      <strong>{{ summary.average_holding_days }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Target Reached</span>
+      <strong>{{ summary.target_reached }}</strong>
+    </div>
+    <div class="stat-card">
+      <span class="label">Max Holding Period</span>
+      <strong>{{ summary.max_period }}</strong>
+    </div>
+  </div>
+</section>
+{% endblock %}
